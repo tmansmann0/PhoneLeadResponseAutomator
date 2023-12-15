@@ -3,11 +3,10 @@ import os
 import openai
 import requests
 import csv
-import datetime
+from datetime import datetime, timedelta
 import dotenv
 import boto3
 from botocore.exceptions import NoCredentialsError
-
 
 app = Flask(__name__)
 
@@ -77,7 +76,7 @@ def process_text():
     # Processing text with OpenAI
     print("Sending request to OpenAI.")
     response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system",
              "content": "You have been tasked with writing a customized sales pitch, while sounding very candid and human. You will assume the fictional name of Tim. The text you generate will be turned into a phone call, so you must write out as if you are a human leaving a voicemail. You will be given the users information. Adapt this basic script..."},
@@ -133,6 +132,15 @@ def process_text():
     file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name_in_bucket}"
     print(f'file stored at {file_url}')
 
+    # Current time in Eastern Time
+    current_time_et = datetime.now() + timedelta(hours=-5)  # Adjusting for Eastern Time
+
+    # Setting the delivery time to 2 minutes in the future
+    future_time_et = current_time_et + timedelta(minutes=2)
+
+    # Formatting the future time in the required format
+    formatted_future_time = future_time_et.strftime('%Y-%m-%d %H:%M:%S')
+
     # Use Slybroadcast API to send voicemail
     print("Sending voicemail via Slybroadcast.")
     data = {
@@ -141,8 +149,8 @@ def process_text():
         'c_url': file_url,
         'c_phone': phone_number,
         'c_callerID': '4849831138',
-        'c_audio': 'mp3',
-        'c_date': 'now',
+        'c_audio': 'Mp3',
+        'c_date': formatted_future_time,
     }
     response = requests.post('https://www.mobile-sphere.com/gateway/vmb.php', data=data)
     print("Voicemail sent via Slybroadcast.")
@@ -150,7 +158,7 @@ def process_text():
 
     # Record the successful submission
     submitted_phone_numbers.add(phone_number)
-    timestamp = datetime.datetime.now()
+    timestamp = datetime.now()
     write_to_csv([timestamp, phone_number, author_name, submission_text, author_email, processed_text])
     print("Recorded submission details to CSV.")
 
