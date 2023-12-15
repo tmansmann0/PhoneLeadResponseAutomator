@@ -60,9 +60,11 @@ def process_text():
     author_email = data.get('author_email')
     sales_script = data.get('sales_script')
     gpt_setting = data.get('gpt_setting')
+    speaker_voice = data.get('speaker_voice')
     print(f"Extracted data: Phone number: {phone_number}, Author: {author_name}, Text: {submission_text}, Email: {author_email}")
     print(f"Sales Script: {sales_script}")
     print(f"GPT settings: {gpt_setting}")
+    print(f"Speaker voice: {speaker_voice}")
     # Check for cookie to see if user has already submitted
     #user_cookie = request.cookies.get('submitted')
     ##if user_cookie:
@@ -100,7 +102,7 @@ def process_text():
     print("Sending request to ElevenLabs for text-to-speech.")
 
     # Specify the voice_id and other parameters
-    voice_id = "xc4QPc6V39G77zvHrDEx"  # Replace with your chosen voice ID
+    voice_id = speaker_voice  # Replace with your chosen voice ID
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
 
     payload = {
