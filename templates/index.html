@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Processing App</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        /* Animated gradient background */
+        body {
+            background: linear-gradient(270deg, pink, orange);
+            background-size: 200% 200%;
+            animation: gradient 15s ease infinite;
+            font-family: Arial, sans-serif; /* Similar font */
+        }
+        /* Form styling */
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto; /* Increased top and bottom margin */
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.15); /* Added box shadow */
+        }
+        /* Form label styling */
+        label {
+            font-weight: bold;
+        }
+        /* Keyframes for the animated gradient */
+        @keyframes gradient {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="text-center">Text Processing Interface</h1>
+        <form action="/process" method="post" class="p-3">
+            <div class="form-group">
+                <label for="phone_number">Phone Number:</label>
+                <input type="text" id="phone_number" name="phone_number" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="author_name">Name:</label>
+                <input type="text" id="author_name" name="author_name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="author_email">Email:</label>
+                <input type="email" id="author_email" name="author_email" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="submission_text">Reason for Interest:</label>
+                <textarea id="submission_text" name="submission_text" rows="4" class="form-control"></textarea>
+            </div>
+            <input type="submit" value="Process Text" class="btn btn-primary">
+        </form>
+    </div>
+</body>
+</html>
