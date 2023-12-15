@@ -85,7 +85,8 @@ def process_text():
     print("Sending request to OpenAI.")
     response = openai.chat.completions.create(
         model=gpt_setting,
-        temperature=0.2,
+        temperature=0.35,
+        max_tokens=250,
         messages=[
             {"role": "system",
              "content": f"{sales_script}"},
