@@ -55,6 +55,8 @@ def process_text():
     author_name = data.get('author_name')
     submission_text = data.get('submission_text')
     author_email = data.get('author_email')
+    sales_script = data.get('sales_script')
+    gpt_setting = data.get('gpt_setting')
     print(f"Extracted data: Phone number: {phone_number}, Author: {author_name}, Text: {submission_text}, Email: {author_email}")
 
     # Check for cookie to see if user has already submitted
@@ -76,10 +78,10 @@ def process_text():
     # Processing text with OpenAI
     print("Sending request to OpenAI.")
     response = openai.chat.completions.create(
-        model="gpt-4",
+        model=gpt_setting,
         messages=[
             {"role": "system",
-             "content": "Keep your output short but sweet while following these rules: You have been tasked with writing a customized sales pitch, while sounding very candid and human. You will assume the fictional name of Tim. The text you generate will be turned into a phone call, so you must write out as if you are a human leaving a voicemail. You will be given the users information. Adapt this basic script..."},
+             "content": f"{sales_script}"},
             {"role": "user", "content": f"name: {author_name} reason for interest: {submission_text}"}
         ]
     )
@@ -97,11 +99,11 @@ def process_text():
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
 
     payload = {
-        "model_id": "eleven_monolingual_v1",  # Replace with your model ID
+        "model_id": "eleven_multilingual_v2",  # Replace with your model ID
         "text": processed_text,
         "voice_settings": {
-            "similarity_boost": 0.5,  # Adjust as needed
-            "stability": 0.5,  # Adjust as needed
+            "similarity_boost": 0.8,  # Adjust as needed
+            "stability": 0.7,  # Adjust as needed
             "style": 0.3,  # Adjust as needed
             "use_speaker_boost": True
         }
