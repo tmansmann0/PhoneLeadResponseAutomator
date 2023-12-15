@@ -24,6 +24,9 @@ BUCKET_NAME = os.getenv("BUCKET_NAME")
 
 CHUNK_SIZE = 1024
 
+# Caller ID options (4849831138 or 8148261207
+caller_id = '8148261207'
+
 # Initialize the S3 client
 s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
 
@@ -58,7 +61,8 @@ def process_text():
     sales_script = data.get('sales_script')
     gpt_setting = data.get('gpt_setting')
     print(f"Extracted data: Phone number: {phone_number}, Author: {author_name}, Text: {submission_text}, Email: {author_email}")
-
+    print(f"Sales Script: {sales_script}")
+    print(f"GPT settings: {gpt_setting}")
     # Check for cookie to see if user has already submitted
     #user_cookie = request.cookies.get('submitted')
     ##if user_cookie:
@@ -79,6 +83,7 @@ def process_text():
     print("Sending request to OpenAI.")
     response = openai.chat.completions.create(
         model=gpt_setting,
+        temperature=0.2,
         messages=[
             {"role": "system",
              "content": f"{sales_script}"},
@@ -158,7 +163,7 @@ def process_text():
         'c_password': slybroadcast_password,
         'c_url': file_url,
         'c_phone': phone_number,
-        'c_callerID': '4849831138',
+        'c_callerID': caller_id,
         'c_audio': 'Mp3',
         'c_date': formatted_future_time,
         'c_title': 'test_campaign',
