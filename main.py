@@ -29,7 +29,7 @@ s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=
 
 # Specify the file path
 file_path = 'output.mp3'  # Replace with your file's path
-file_name_in_bucket = 'outputtest.mp3'  # Replace with the desired file name in the bucket
+file_name_in_bucket = 'output.mp3'  # Replace with the desired file name in the bucket
 
 # Initialize OpenAI API
 openai.api_key = OPENAI_API_KEY
@@ -79,14 +79,14 @@ def process_text():
         model="gpt-4",
         messages=[
             {"role": "system",
-             "content": "You have been tasked with writing a customized sales pitch, while sounding very candid and human. You will assume the fictional name of Tim. The text you generate will be turned into a phone call, so you must write out as if you are a human leaving a voicemail. You will be given the users information. Adapt this basic script..."},
+             "content": "Keep your output short but sweet while following these rules: You have been tasked with writing a customized sales pitch, while sounding very candid and human. You will assume the fictional name of Tim. The text you generate will be turned into a phone call, so you must write out as if you are a human leaving a voicemail. You will be given the users information. Adapt this basic script..."},
             {"role": "user", "content": f"name: {author_name} reason for interest: {submission_text}"}
         ]
     )
     print("Received response from OpenAI.")
 
     # Processed text from OpenAI
-    processed_text = response.choices[0].message.content
+    processed_text = str(response.choices[0].message.content)
     print(response.choices[0].message.content)
 
     # Use ElevenLabs API to convert text to speech
@@ -113,12 +113,20 @@ def process_text():
     }
     response = requests.post(url, json=payload, headers=headers)
 
-    # Write the response to an MP3 file
+    # Define Filename
+    mp3_temp_filename = 'tempoutput.mp3'
     mp3_filename = 'output.mp3'
-    with open(mp3_filename, 'wb') as f:
+    # Delete existing file
+    if os.path.exists(mp3_filename):
+        os.remove(mp3_filename)
+    # Write the response to an MP3 file
+    with open(mp3_temp_filename, 'wb') as f:
         for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
             if chunk:
                 f.write(chunk)
+
+    # Rename the temporary file to the actual file name after the download is complete
+    os.rename(mp3_temp_filename, mp3_filename)
 
     try:
         # Upload the file
@@ -132,8 +140,8 @@ def process_text():
     file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name_in_bucket}"
     print(f'file stored at {file_url}')
 
-    # Current time in Eastern Time
-    current_time_et = datetime.now() + timedelta(hours=-5)  # Adjusting for Eastern Time
+    # Current time
+    current_time_et = datetime.now()
 
     # Setting the delivery time to 2 minutes in the future
     future_time_et = current_time_et + timedelta(minutes=2)
@@ -151,10 +159,11 @@ def process_text():
         'c_callerID': '4849831138',
         'c_audio': 'Mp3',
         'c_date': formatted_future_time,
+        'c_title': 'test_campaign',
     }
     response = requests.post('https://www.mobile-sphere.com/gateway/vmb.php', data=data)
     print("Voicemail sent via Slybroadcast.")
-    print(f"Slybroadcast: {response}")
+    print(response.text)
 
     # Record the successful submission
     submitted_phone_numbers.add(phone_number)
