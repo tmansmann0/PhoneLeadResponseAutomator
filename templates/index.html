@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
 <head>
     <title>Instant Lead AI Demo</title>
     <!-- Add Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        /* Animated gradient background */
+        /* Animated lava-lamp style gradient background */
         body {
-            background: linear-gradient(270deg, pink, orange);
-            background-size: 200% 200%;
-            animation: gradient 15s ease infinite;
+            background: linear-gradient(270deg, pink, orange, purple, cyan);
+            background-size: 400% 400%;
+            animation: gradient 30s ease infinite;
             font-family: Arial, sans-serif; /* Similar font */
         }
         /* Form styling */
@@ -27,15 +25,17 @@
         }
         /* Keyframes for the animated gradient */
         @keyframes gradient {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 75%; }
+            50% { background-position: 0% 25%; }
+            75% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1 class="text-center">Text Processing Interface</h1>
+        <h1 class="text-center">Instant Lead AI Demo</h1>
         <form action="/process" method="post" class="p-3">
             <div class="form-group">
                 <label for="phone_number">Phone Number:</label>
